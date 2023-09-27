@@ -8,3 +8,5 @@
 
 ## 🎉 해결하지 못한 부분 풀이.
 - DFS 를 활용한 재귀 방식을 사용해서 +, - 의 경우로 나눠 edge를 뻗어나가며 재귀 처리를 한다.
+- 입력 케이스 [4, 1, 2, 1] 중 + case 예시\
+  ![image](https://github.com/Sangh0Yoon/coding-practice/assets/100823955/13991cc1-9857-41cc-8d72-7b925dd6017e)
