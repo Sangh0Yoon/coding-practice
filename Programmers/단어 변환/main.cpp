@@ -1,49 +1,41 @@
+#include <string>
 #include <vector>
-#include <iostream>
 #include <algorithm>
-#include <queue>
+
 using namespace std;
 
-int dx[4] = {0, 0, 1, -1};
-int dy[4] = {1, -1, 0, 0};
-int row, col;
+int answer = 999999;
+int word_vec_sz, word_sz;
+bool visited[50] = {0, };
 
-int get_min_route(const vector<vector<int>> maps){
-    int dist = 99999;
-    bool visited[100][100] = {0, };
-    queue<pair<pair<int,int>,int>> q;
-    q.push({{0,0},0});
-    visited[0][0] = true;
-    
-    while(!q.empty()){
-        int cur_x = q.front().first.first;
-        int cur_y = q.front().first.second;
-        int cur_d = q.front().second;
-        q.pop();
+void translate_alphabet(const vector<string>& words, bool* visited, string begin, string target, int time){
+    int same_cnt;
+    if(begin.compare(target) == 0){
+        answer = min(time, answer);
+        return ;
+    }
+    for(int i=0;i<word_vec_sz;i++){
+        same_cnt = 0;
         
-        if(cur_x == row-1 && cur_y == col-1){
-            dist = min(dist, cur_d+1);
+        if(visited[i]) continue;
+        
+        for(int j=0;j<word_sz;j++){
+            if(begin[j] == words[i][j]){
+                same_cnt++;
+            }
         }
-        
-        for(int i=0;i<4;i++){
-            int nx = cur_x + dx[i];
-            int ny = cur_y + dy[i];
-            if(nx < 0 || nx >= row || ny < 0 || ny >= col) continue;
-            if(visited[nx][ny] || maps[nx][ny] == 0) continue;
-            
-            q.push({{nx,ny}, cur_d+1});
-            visited[nx][ny] = true;
+        if(same_cnt == word_sz - 1){
+            visited[i] = true;
+            translate_alphabet(words, visited, words[i], target, time+1);
+            visited[i] = false;
         }
     }
-    
-    return dist == 99999 ? -1 : dist;
 }
 
-int solution(vector<vector<int>> maps)
-{
-    row = maps.size();
-    col = maps[0].size();
-    int min_dist = get_min_route(maps);
+int solution(string begin, string target, vector<string> words) {
+    word_vec_sz = words.size();
+    word_sz = words[0].length();
     
-    return min_dist;
+    translate_alphabet(words, visited, begin, target, 0);
+    return answer == 999999 ? 0 : answer;
 }
